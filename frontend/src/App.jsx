@@ -4,8 +4,9 @@ import { AuthProvider } from './context/AuthContext';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import AdminDashboard from './pages/admin/AdminDashboard';
-import ModeratorDashboard from './pages/moderator/ModeratorDashboard';
-import UserDashboard from './pages/user/UserDashboard';
+import ConductorDashboard from './pages/conductor/ConductorDashboard';
+import ProveedorDashboard from './pages/proveedor/ProveedorDashboard';
+import ClienteDashboard from './pages/cliente/clienteDashboard';
 import RoleProtectedRoute from './components/RoleProtectedRoute';
 
 const App = () => {
@@ -26,18 +27,26 @@ const App = () => {
                         }
                     />
                     <Route
-                        path="/moderator/moderatorDashboard"
+                        path="/conductor/conductorDashboard"
                         element={
-                            <RoleProtectedRoute allowedRoles={['moderator']}>
-                                <ModeratorDashboard />
+                            <RoleProtectedRoute allowedRoles={['conductor']}>
+                                <ConductorDashboard />
                             </RoleProtectedRoute>
                         }
                     />
                     <Route
-                        path="/user/userDashboard"
+                        path="/proveedor/proveedorDashboard"
                         element={
-                            <RoleProtectedRoute allowedRoles={['user']}>
-                                <UserDashboard />
+                            <RoleProtectedRoute allowedRoles={['proveedor']}>
+                                <ProveedorDashboard />
+                            </RoleProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/cliente/clienteDashboard"
+                        element={
+                            <RoleProtectedRoute allowedRoles={['cliente']}>
+                                <ClienteDashboard />
                             </RoleProtectedRoute>
                         }
                     />

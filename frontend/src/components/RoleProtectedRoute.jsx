@@ -16,8 +16,9 @@ const RoleProtectedRoute = ({ children, allowedRoles }) => {
         // Redirigir al dashboard específico del rol del usuario
         const roleToPath = {
             admin: '/admin/adminDashboard',
-            moderator: '/moderator/moderatorDashboard',
-            user: '/user/userDashboard',
+            conductor: '/conductor/conductorDashboard',
+            proveedor: '/proveedor/proveedorDashboard',
+            cliente: '/cliente/clienteDashboard',
         };
         return <Navigate to={roleToPath[userRole]} replace />;
     }

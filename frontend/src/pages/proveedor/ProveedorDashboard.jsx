@@ -12,7 +12,7 @@ const UserDashboard = () => {
     };
     return (
         <div>
-            <h1>Panel de Usuario</h1>
+            <h1>Panel de Proveedor</h1>
             <p>Contenido para usuarios registrados.</p>
             <button onClick={handleLogout}>Cerrar sesión</button>
         </div>
