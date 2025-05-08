@@ -3,10 +3,10 @@ const jwt = require('jsonwebtoken');
 const connection = require('../config/db');
 
 module.exports.login = (req, res) => {
-    const { username, password } = req.body;
-    const query = 'SELECT * FROM users WHERE username = ?';
+    const { email, password } = req.body;
+    const query = 'SELECT * FROM users WHERE email = ?';
 
-    connection.query(query, [username], async (err, results) => {
+    connection.query(query, [email], async (err, results) => {
         if (err) return res.status(500).send(err);
 
         if (results.length === 0) {
@@ -19,7 +19,7 @@ module.exports.login = (req, res) => {
         if (passwordMatch) {
             // Incluye el rol en el token JWT
             const token = jwt.sign(
-                { username: user.username, role: user.role },
+                { email: user.email, role: user.role },
                 process.env.JWT_SECRET,
                 { expiresIn: '1h' }
             );

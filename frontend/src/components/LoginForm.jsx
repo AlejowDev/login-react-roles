@@ -1,113 +1,156 @@
-// src/components/LoginForm.jsx
 import React, { useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
-import loginBg from "../assets/img/img-login.jpg";
-import logo from "../assets/img/logo.png";
+import logo from "../assets/img/login.png";
+import { FaUser, FaLock } from "react-icons/fa";
+import bgImage from "../assets/img/bg-login-centro.jpg";
 
 const LoginForm = () => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
-      const response = await axios.post(
+      const { data } = await axios.post(
         `${import.meta.env.VITE_API_URL}/login`,
-        { username, password }
+        { email, password }
       );
-      const { token } = response.data;
-      login(token);
-      const userRole = JSON.parse(atob(token.split(".")[1])).role;
-      if (userRole === "admin")
-        navigate("/admin/adminDashboard", { replace: true });
-      else if (userRole === "conductor")
-        navigate("/conductor/conductorDashboard", { replace: true });
-      else if (userRole === "proveedor")
-        navigate("/proveedor/proveedorDashboard", { replace: true });
-      else navigate("/cliente/clienteDashboard", { replace: true });
-    } catch (error) {
+      login(data.token);
+      const role = JSON.parse(atob(data.token.split(".")[1])).role;
+      switch (role) {
+        case "admin":
+          navigate("/admin/adminDashboard", { replace: true });
+          break;
+        case "conductor":
+          navigate("/conductor/conductorDashboard", { replace: true });
+          break;
+        case "proveedor":
+          navigate("/proveedor/proveedorDashboard", { replace: true });
+          break;
+        default:
+          navigate("/cliente/clienteDashboard", { replace: true });
+      }
+    } catch (err) {
       Swal.fire({
         title: "Error en el inicio de sesión",
-        text:
-          error.response?.data.message || "Usuario o contraseña incorrectos",
+        text: err.response?.data.message || "Usuario o contraseña incorrectos",
         icon: "error",
         confirmButtonText: "Intentar de nuevo",
+        confirmButtonColor: "#2563EB",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div
-      className="min-h-screen w-full flex items-center justify-center bg-cover bg-center"
-      style={{ backgroundImage: `url(${loginBg})` }}
+      className="relative min-h-screen w-full flex items-center justify-center bg-no-repeat bg-cover bg-center px-4"
+      style={{ backgroundImage: `url(${bgImage})` }}
     >
-      <div className="bg-white border rounded-xl shadow-lg p-8 w-full max-w-md text-white">
-        <div className="mb-6 text-center">
-          {/* <img
-            src={logo}
-            alt="Logo de la compañía"
-            className="mx-auto w-24 h-auto sm:w-28 md:w-32 lg:w-36"
-          /> */}
-          <p className="text-black mt-5">Modulo de ingreso al sistema</p>
-        </div>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-black text-sm mb-1">E-mail</label>
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="nombre@company.com"
-              className="w-full px-4 py-2 rounded-md bg-gray-800 border border-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-black text-sm mb-1">Contraseña</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              className="w-full px-4 py-2 rounded-md bg-gray-800 border border-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
+      {/* Contenedor doble: Login y Registro */}
+      <div className="relative z-10 flex flex-col lg:flex-row bg-white border border-gray-200 rounded-lg shadow-md max-w-5xl w-full overflow-hidden backdrop-blur-sm">
+        {/* LOGIN */}
+        <div className="w-full lg:w-1/2 p-8">
+          <div className="flex justify-center mb-6">
+            <img src={logo} alt="Logo" className="h-16 w-auto" />
           </div>
 
-          <div className="flex items-center justify-between text-sm text-gray-400">
-            <label className="inline-flex items-center">
-              <input type="checkbox" className="form-checkbox text-blue-500" />
-              <span className="ml-2 text-black">Recordarme</span>
-            </label>
-            <a href="#" className="text-blue-400 hover:underline">
-              ¿Olvidaste ru contraseña?
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-gray-700 text-sm font-medium mb-1">
+                E-mail
+              </label>
+              <div className="relative">
+                <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="nombre@correo.com"
+                  className="w-full pl-10 px-4 py-2 rounded-md bg-gray-50 border border-gray-300"
+                  required
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-gray-700 text-sm font-medium mb-1">
+                Contraseña
+              </label>
+              <div className="relative">
+                <FaLock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="w-full pl-10 px-4 py-2 rounded-md bg-gray-50 border border-gray-300"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between text-sm">
+              <label className="inline-flex items-center text-gray-600">
+                <input
+                  type="checkbox"
+                  className="form-checkbox text-blue-600"
+                />
+                <span className="ml-2">Recordarme</span>
+              </label>
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className={`w-full py-2 rounded-md text-white font-medium transition duration-200 ${
+                loading
+                  ? "cursor-not-allowed bg-blue-300"
+                  : "bg-blue-600 hover:bg-blue-700 hover:scale-105"
+              }`}
+            >
+              {loading ? "Ingresando..." : "Ingresar"}
+            </button>
+          </form>
+        </div>
+
+        {/* LÍNEA DIVISORIA HORIZONTAL EN MÓVIL */}
+        <div className="block lg:hidden h-px bg-gray-300 my-2 mx-6"></div>
+
+        {/* LÍNEA DIVISORIA VERTICAL EN ESCRITORIO */}
+        <div className="hidden lg:block w-px bg-gray-300"></div>
+
+        {/* REGISTRO */}
+        <div className="w-full lg:w-1/2 bg-white p-8 flex flex-col justify-center items-center text-center">
+          <h2 className="text-2xl font-semibold mb-4 text-gray-800">
+            ¿Aún no estás registrado?
+          </h2>
+          <p className="text-gray-600 mb-6">
+            Elige cómo deseas registrarte y empieza a disfrutar nuestros
+            servicios.
+          </p>
+          <div className="flex flex-col space-y-3 w-full max-w-[250px]">
+            <a
+              href="/register"
+              className="py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200 font-medium text-center"
+            >
+              Registro Persona Natural
+            </a>
+            <a
+              href="/registerEmpresa"
+              className="py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200 font-medium text-center"
+            >
+              Registro Empresa
             </a>
           </div>
-
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-all"
-          >
-            Ingresar
-          </button>
-        </form>
-
-        <div className="flex items-center my-4">
-          <div className="flex-grow h-px bg-gray-700"></div>
-
-          <div className="flex-grow h-px bg-gray-700"></div>
-        </div>
-
-        <div className="mt-6 text-center text-sm text-black">
-          No tienes una cuenta?{" "}
-          <a href="/register" className="text-blue-400 hover:underline">
-            Registrate
-          </a>
         </div>
       </div>
     </div>
