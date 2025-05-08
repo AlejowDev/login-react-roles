@@ -19,7 +19,7 @@ import bgImage from "../assets/img/bg-login-centro.jpg";
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
     document: "",
-    tipo_documento: "",
+    tipo_documento: "CEDULA",
     name: "",
     email: "",
     password: "",
@@ -44,6 +44,14 @@ const RegisterForm = () => {
     setFormData({
       ...formData,
       [name]: value,
+    });
+  };
+
+  const handleUppercaseChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value.toUpperCase(),
     });
   };
 
@@ -99,8 +107,8 @@ const RegisterForm = () => {
                 type="text"
                 name="tipo_documento"
                 value="CEDULA"
-                disabled
-                className="w-full px-4 py-2 rounded-md bg-gray-100 border border-gray-300 text-gray-600 cursor-not-allowed"
+                readOnly
+                className="w-full px-4 py-2 rounded-md bg-gray-100 border border-gray-300 text-gray-600"
               />
             </div>
           </div>
@@ -135,7 +143,7 @@ const RegisterForm = () => {
                 type="text"
                 name="name"
                 value={formData.name}
-                onChange={handleChange}
+                onChange={handleUppercaseChange}
                 placeholder="Nombre completo"
                 className="w-full pl-10 px-4 py-2 rounded-md bg-gray-50 border border-gray-300"
                 required
@@ -173,7 +181,7 @@ const RegisterForm = () => {
                 type="text"
                 name="direccion"
                 value={formData.direccion}
-                onChange={handleChange}
+                onChange={handleUppercaseChange}
                 placeholder="Dirección"
                 className="w-full pl-10 px-4 py-2 rounded-md bg-gray-50 border border-gray-300"
               />
@@ -219,7 +227,7 @@ const RegisterForm = () => {
                 type="text"
                 name="ciudad_nacimiento"
                 value={formData.ciudad_nacimiento}
-                onChange={handleChange}
+                onChange={handleUppercaseChange}
                 placeholder="Ciudad"
                 className="w-full pl-10 px-4 py-2 rounded-md bg-gray-50 border border-gray-300"
               />

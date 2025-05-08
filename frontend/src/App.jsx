@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import RegisterCompanyForm from './pages/RegisterCompanyForm'; // 👈 nuevo componente
 import AdminDashboard from './pages/admin/AdminDashboard';
 import ConductorDashboard from './pages/conductor/ConductorDashboard';
 import ProveedorDashboard from './pages/proveedor/ProveedorDashboard';
@@ -17,6 +18,7 @@ const App = () => {
                     <Route path="/" element={<Login />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
+                    <Route path="/registerEmpresa" element={<RegisterCompanyForm />} /> {/* ✅ nuevo */}
 
                     <Route
                         path="/admin/adminDashboard"
